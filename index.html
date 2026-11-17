@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expediente digital para Creatio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#15171c; --mute:#6b7382; --soft:#9aa1ad; --line:#ececee; --bg:#fff; --panel:#f6f6f7; --panel2:#efeff1;
+  --blue:#2f6bff; --green:#1f9d61; --amber:#c27a12; --red:#d4483b;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-optical-sizing:auto;-webkit-font-smoothing:antialiased;font-size:16px;line-height:1.5}
+a{color:inherit;text-decoration:none}
+.shell{max-width:1200px;margin:0 auto;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+section{border-top:1px solid var(--line)}
+.pad{padding:96px 64px}
+@media (max-width:860px){.pad{padding:64px 22px}}
+
+/* top note + header */
+.note{background:#f4f4f5;color:var(--mute);font-size:12px;text-align:center;padding:7px 12px;border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.86);backdrop-filter:saturate(1.6) blur(12px);-webkit-backdrop-filter:saturate(1.6) blur(12px);border-bottom:1px solid var(--line)}
+.hdr{max-width:1200px;margin:0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;letter-spacing:-.2px}
+.mark{width:26px;height:26px;border-radius:7px;background:var(--ink);display:grid;place-items:center}
+.brand small{color:var(--mute);font-weight:500}
+.cr{display:inline-block;vertical-align:middle;width:auto}
+.forc{display:inline-flex;align-items:center;gap:5px;margin-left:4px;padding:3px 8px;border-radius:6px;background:var(--panel);font-size:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;font:500 14px Inter,sans-serif;cursor:pointer;border:0;transition:transform .15s ease, background .15s}
+.btn:active{transform:scale(.98)}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-dark:not(.btn-shiny):hover{background:#2a2e36}
+.btn-light{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px #e2e3e6}
+.btn-light:hover{background:#fafafa}
+.btn-lg{height:46px;padding:0 20px;font-size:15px}
+
+
+/* botón principal con brillo (adaptado del botón del Center, en la paleta de esta página) */
+@property --sc-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+@property --sc-angle-offset{syntax:"<angle>";initial-value:0deg;inherits:false}
+@property --sc-percent{syntax:"<percentage>";initial-value:5%;inherits:false}
+@property --sc-shine{syntax:"<color>";initial-value:#ffffff;inherits:false}
+:root{--sc-bg:#15171c;--sc-bg-subtle:#262a33;--sc-fg:#fff;--sc-hl:#4f7cf5;--sc-hl-subtle:#9cb9ff;--sc-dur:3s;--sc-ease:800ms cubic-bezier(.25,1,.5,1)}
+.btn-shiny{isolation:isolate;position:relative;overflow:hidden;border:1px solid transparent;border-radius:12px;color:var(--sc-fg);
+  background:linear-gradient(var(--sc-bg),var(--sc-bg)) padding-box,
+    conic-gradient(from calc(var(--sc-angle) - var(--sc-angle-offset)),transparent,var(--sc-hl) var(--sc-percent),var(--sc-shine) calc(var(--sc-percent) * 2),var(--sc-hl) calc(var(--sc-percent) * 3),transparent calc(var(--sc-percent) * 4)) border-box;
+  box-shadow:inset 0 0 0 1px var(--sc-bg-subtle),inset 0 -.8ex 1.2rem 0 color-mix(in srgb,var(--sc-hl) 30%,transparent),0 8px 24px -10px rgba(47,91,234,.45);
+  transition:var(--sc-ease);transition-property:--sc-angle-offset,--sc-percent,--sc-shine,box-shadow,translate;
+  animation:sc-angle var(--sc-dur) linear infinite,sc-angle calc(var(--sc-dur) / .4) linear infinite reverse paused;animation-composition:add}
+.btn-shiny::before{content:"";pointer-events:none;position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:-1;width:calc(100% - 6px);height:calc(100% - 6px);border-radius:inherit;
+  background:radial-gradient(circle at 2px 2px,#fff .5px,transparent 0) padding-box;background-size:4px 4px;background-repeat:space;
+  -webkit-mask-image:conic-gradient(from calc(var(--sc-angle) + 45deg),#000,transparent 10% 90%,#000);mask-image:conic-gradient(from calc(var(--sc-angle) + 45deg),#000,transparent 10% 90%,#000);
+  opacity:.75;animation:sc-angle var(--sc-dur) linear infinite,sc-angle calc(var(--sc-dur) / .4) linear infinite reverse paused;animation-composition:add}
+.btn-shiny::after{content:"";pointer-events:none;position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:-1;width:100%;aspect-ratio:1;
+  background:linear-gradient(-50deg,transparent 15%,var(--sc-hl) 50%,var(--sc-hl-subtle) 58%,transparent 85%);
+  -webkit-mask-image:radial-gradient(circle at bottom,transparent 30%,#000);mask-image:radial-gradient(circle at bottom,transparent 30%,#000);
+  opacity:.85;animation:sc-shimmer var(--sc-dur) linear infinite,sc-shimmer calc(var(--sc-dur) / .4) linear infinite reverse paused;animation-composition:add}
+.btn-shiny:is(:hover,:focus-visible):not(:disabled){--sc-percent:20%;--sc-angle-offset:95deg;--sc-shine:var(--sc-hl-subtle);background-color:transparent;
+  box-shadow:inset 0 0 0 1px var(--sc-bg-subtle),inset 0 -1ex 1.6rem 2px color-mix(in srgb,var(--sc-hl) 55%,transparent),0 10px 30px -10px rgba(47,91,234,.6)}
+.btn-shiny:is(:hover,:focus-visible),.btn-shiny:is(:hover,:focus-visible)::before,.btn-shiny:is(:hover,:focus-visible)::after{animation-play-state:running}
+.btn-shiny:active:not(:disabled){translate:0 1px}
+.btn-shiny:disabled{opacity:.5;cursor:not-allowed}
+.btn-shiny:disabled,.btn-shiny:disabled::before,.btn-shiny:disabled::after{animation-play-state:paused}
+@keyframes sc-angle{to{--sc-angle:360deg}}
+@keyframes sc-shimmer{to{rotate:360deg}}
+@media (prefers-reduced-motion:reduce){.btn-shiny,.btn-shiny::before,.btn-shiny::after{animation:none!important}}
+
+/* hero */
+.hero{padding:88px 24px 0;text-align:center}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:999px;box-shadow:inset 0 0 0 1px #e6e7ea;font-size:13px;font-weight:500;color:var(--ink);background:#fff}
+.pill b{background:var(--blue);color:#fff;font-weight:500;font-size:12px;padding:2px 9px;border-radius:999px}
+.pill span{color:var(--soft)}
+h1{font-size:clamp(40px,6.4vw,76px);line-height:1.02;letter-spacing:-.045em;font-weight:600;margin:26px auto 0;max-width:940px}
+.lead{font-size:clamp(17px,1.6vw,19px);line-height:1.55;color:var(--mute);font-weight:500;max-width:640px;margin:22px auto 0;letter-spacing:-.01em}
+.lead strong{color:var(--ink);font-weight:500}
+.ctas{display:flex;gap:10px;justify-content:center;margin-top:30px;flex-wrap:wrap}
+.fine{font-size:13px;color:var(--soft);margin-top:16px}
+
+
+.rot{position:relative;display:inline-grid;grid-template-columns:minmax(0,1fr);justify-items:center;vertical-align:baseline;clip-path:inset(-.12em 0 -.26em 0);transition:width .55s cubic-bezier(.2,.8,.2,1)}
+.rot-w{grid-area:1/1;white-space:nowrap;padding:0 .04em;color:var(--blue);background:linear-gradient(180deg,#4f7cf5,#1f45c9);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  transform:translateY(120%);opacity:0;visibility:hidden;transition:transform .7s cubic-bezier(.34,1.45,.5,1),opacity .4s ease}
+.rot-w.on{transform:none;opacity:1;visibility:visible}
+.rot-w.out{transform:translateY(-120%);opacity:0;visibility:visible}
+@media (prefers-reduced-motion:reduce){.rot-w{transition:none}}
+
+/* sky */
+.sky{position:relative;margin:64px 24px 0;border-radius:22px 22px 0 0;overflow:hidden;padding:72px 56px 0;min-height:200px}
+.sky .bgsky{position:absolute;inset:0;background:linear-gradient(180deg,#5e93d6 0%,#86b3e6 38%,#c3dbf2 72%,#eef4fb 100%)}
+.sky svg.clouds{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:screen;opacity:.95}
+.sky .sun{position:absolute;right:-8%;top:-30%;width:70%;height:90%;background:radial-gradient(closest-side,rgba(255,250,235,.85),rgba(255,250,235,0));filter:blur(10px)}
+@media (max-width:860px){.sky{margin:48px 10px 0;padding:36px 12px 0}}
+
+/* app window */
+.win{position:relative;background:#fff;border-radius:14px 14px 0 0;box-shadow:0 30px 80px -30px rgba(18,40,80,.45),0 0 0 1px rgba(255,255,255,.6);overflow:hidden;text-align:left;max-width:1000px;margin:0 auto}
+.wbar{height:38px;display:flex;align-items:center;gap:7px;padding:0 14px;border-bottom:1px solid var(--line);background:#fbfbfc}
+.wbar i{width:10px;height:10px;border-radius:50%;background:#e2e3e6;display:block}
+.wbar span{margin-left:10px;font-size:12px;color:var(--soft)}
+.app{display:grid;grid-template-columns:190px 1fr;min-height:470px}
+.side{border-right:1px solid var(--line);padding:16px 12px;background:#fcfcfd}
+.side .ws{font-size:12px;font-weight:600;padding:6px 8px;margin-bottom:10px}
+.nav-i{display:flex;align-items:center;gap:9px;font-size:13px;padding:7px 8px;border-radius:8px;color:#3b404a}
+.nav-i.on{background:#eef2fb;color:var(--ink);font-weight:500}
+.nav-i em{width:16px;height:16px;border-radius:5px;display:block;flex:none}
+.main{padding:20px 22px}
+.mt{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.mt h4{margin:0;font-size:16px;font-weight:600;letter-spacing:-.2px}
+.chip{font-size:11px;font-weight:500;padding:3px 8px;border-radius:999px;background:var(--panel);color:var(--mute)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kpi b{display:block;font-size:22px;font-weight:600;letter-spacing:-.5px}
+.kpi small{font-size:11px;color:var(--mute);line-height:1.25;display:block}
+.kpi.warn b{color:var(--amber)} .kpi.bad b{color:var(--red)}
+.charts{display:grid;grid-template-columns:1fr 1.5fr;gap:10px;margin-top:10px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px}
+.card h5{margin:0 0 10px;font-size:12px;font-weight:500;color:var(--mute)}
+.donut{width:120px;height:120px;border-radius:50%;background:conic-gradient(#2f6bff 0 38%,#7aa2ff 38% 69%,#b9c9f5 69% 84%,#f0b44c 84% 92%,#e66b5f 92% 100%);position:relative;margin:4px auto 0}
+.donut::after{content:"";position:absolute;inset:22px;background:#fff;border-radius:50%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:center;margin-top:12px;font-size:11px;color:var(--mute)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
+.bars{display:flex;align-items:flex-end;gap:14px;height:150px;padding:0 6px;border-bottom:1px solid var(--line)}
+.bar{flex:1;background:#1f2a44;border-radius:6px 6px 0 0;height:0;transition:height 1s cubic-bezier(.2,.8,.2,1)}
+.blabels{display:flex;gap:14px;padding:6px 6px 0}
+.blabels span{flex:1;font-size:10.5px;color:var(--mute);text-align:center;line-height:1.2}
+@media (max-width:860px){.app{grid-template-columns:1fr}.side{display:none}.kpis{grid-template-columns:repeat(3,1fr)}.charts{grid-template-columns:1fr}}
+
+/* statement */
+.statement h2{font-size:clamp(28px,3.4vw,40px);line-height:1.12;letter-spacing:-.035em;font-weight:500;margin:0;max-width:980px}
+.g{color:var(--mute)}
+
+/* feature rows */
+.feat h3{font-size:clamp(24px,2.6vw,32px);line-height:1.15;letter-spacing:-.03em;font-weight:500;margin:0;max-width:820px}
+.stage{margin-top:40px;background:var(--panel);border-radius:20px;padding:40px;overflow:hidden}
+@media (max-width:860px){.stage{padding:16px;border-radius:16px}}
+.ui{background:#fff;border-radius:14px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 10px 30px -18px rgba(20,30,50,.25),0 0 0 1px #ebebed;max-width:820px;margin:0 auto}
+.ui-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:13px;font-weight:500}
+.ui-h .k{color:var(--mute);font-weight:400}
+.tabs{display:flex;gap:4px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.tab{font-size:12.5px;padding:6px 10px;border-radius:8px;color:var(--mute);font-weight:500}
+.tab.on{background:var(--panel);color:var(--ink)}
+.row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:13px 18px;border-bottom:1px solid #f2f2f3;font-size:14px}
+.row:last-child{border-bottom:0}
+.row .t{font-weight:500}
+.row .s{font-size:12.5px;color:var(--mute)}
+.tag{font-size:11.5px;font-weight:500;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.tag.ok{background:#e7f5ee;color:var(--green)} .tag.wait{background:#fdf3e2;color:var(--amber)} .tag.no{background:#fbe9e7;color:var(--red)} .tag.n{background:var(--panel);color:var(--mute)}
+.two{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;max-width:900px;margin:0 auto}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+
+/* stages */
+.steps{display:flex;gap:6px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.st{flex:1;height:30px;border-radius:7px;background:var(--panel);font-size:12px;font-weight:500;color:var(--soft);display:flex;align-items:center;justify-content:center;transition:background .4s,color .4s}
+.st.done{background:#1f2a44;color:#fff}
+.st.cur{background:var(--blue);color:#fff}
+.ring{--p:0;width:116px;height:116px;border-radius:50%;background:conic-gradient(var(--blue) calc(var(--p)*1%),#eceef2 0);display:grid;place-items:center;margin:8px auto}
+.ring div{width:88px;height:88px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:600;font-size:24px;letter-spacing:-.5px}
+.side-note{padding:18px;text-align:center;font-size:12.5px;color:var(--mute)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:36px 32px;border-left:1px solid var(--line)}
+.stat:first-child{border-left:0}
+.stat b{display:block;font-size:clamp(34px,3.4vw,44px);font-weight:500;letter-spacing:-.04em;line-height:1}
+.stat span{display:block;margin-top:10px;font-size:14px;color:var(--mute)}
+@media (max-width:860px){.stats{grid-template-columns:1fr 1fr}.stat{border-left:0;border-top:1px solid var(--line);padding:28px 22px}}
+
+/* new-in band */
+.kicker{font-size:13px;font-weight:500;color:var(--blue);margin-bottom:14px}
+.reuse{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;max-width:900px;margin:0 auto}
+.arrow{font-size:28px;color:var(--soft);text-align:center}
+@media (max-width:860px){.reuse{grid-template-columns:1fr}}
+
+/* proof */
+.proof{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:end}
+.logos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:36px}
+.logo{height:64px;border-radius:12px;border:1px dashed #d9dbe0;display:grid;place-items:center;font-size:12.5px;color:var(--soft)}
+.quote{background:var(--panel);border-radius:20px;padding:36px}
+.quote p{font-size:22px;line-height:1.35;letter-spacing:-.02em;margin:0;font-weight:500}
+.quote small{display:block;margin-top:16px;color:var(--mute);font-size:13px}
+@media (max-width:860px){.proof{grid-template-columns:1fr}.logos{grid-template-columns:1fr 1fr}}
+
+
+/* authority (dark) */
+.auth{background:#0d0f13;color:#fff;border-top:0;position:relative;overflow:hidden}
+.auth::before{content:"";position:absolute;left:-10%;top:-40%;width:70%;height:90%;background:radial-gradient(closest-side,rgba(79,124,245,.22),rgba(79,124,245,0));pointer-events:none}
+.auth::after{content:"";position:absolute;right:-12%;bottom:-30%;width:60%;height:80%;background:repeating-radial-gradient(circle at 70% 70%,rgba(255,255,255,.035) 0 1px,transparent 1px 26px);pointer-events:none}
+.auth-in{position:relative;padding:110px 64px}
+@media (max-width:860px){.auth-in{padding:72px 22px}}
+.auth h2{font-size:clamp(34px,4.4vw,56px);line-height:1.04;letter-spacing:-.045em;font-weight:600;margin:0;max-width:880px}
+.auth-lead{color:#a3a9b6;font-size:18px;line-height:1.6;max-width:720px;margin:22px 0 0;font-weight:500}
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:56px}
+@media (max-width:980px){.pillars{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.pillars{grid-template-columns:1fr}}
+.pz{background:linear-gradient(180deg,#16191f,#111318);border:1px solid #23262d;border-radius:18px;padding:28px 24px;position:relative;overflow:hidden}
+.pz::before{content:"";position:absolute;left:24px;top:0;width:28px;height:2px;background:linear-gradient(90deg,#7aa2ff,#2f5bea)}
+.pz-ic{width:44px;height:44px}
+.pz h4{margin:18px 0 8px;font-size:18px;font-weight:600;letter-spacing:-.02em}
+.pz p{margin:0;color:#9aa1ad;font-size:14px;line-height:1.55}
+.auth-foot{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-top:14px}
+@media (max-width:860px){.auth-foot{grid-template-columns:1fr}}
+.auth .logos{grid-template-columns:repeat(3,1fr);margin:0;align-content:stretch}
+.auth .logo{height:auto;min-height:88px;border-color:#2a2e36;color:#6b7280;text-align:center;padding:8px}
+.auth .quote{background:#14171c;border:1px solid #23262d}
+.auth .quote p{color:#e6e8ec;font-size:18px}
+.auth .quote small{color:#7d8492}
+.btn-white{background:#fff;color:#15171c}
+.btn-white:hover{background:#e9ecf2}
+
+
+.auth-top{display:grid;grid-template-columns:1.25fr .75fr;gap:48px;align-items:center}
+@media (max-width:980px){.auth-top{grid-template-columns:1fr}}
+.peak-wrap{display:flex;justify-content:center}
+.pk-card{position:relative;flex:none;color:#fff;user-select:none}
+.pk-card canvas{position:absolute;pointer-events:none}
+.pk-t{position:absolute;white-space:nowrap;margin:0;line-height:1;font-family:Inter,system-ui,sans-serif}
+
+
+@property --pk-a{syntax:"<angle>";initial-value:0deg;inherits:false}
+.pk-card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;z-index:2;
+  background:conic-gradient(from var(--pk-a),transparent 0 50%,rgba(79,124,245,.35) 62%,#7aa2ff 74%,#ffffff 80%,#7aa2ff 86%,transparent 97%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  animation:pk-spin 5s linear infinite;filter:drop-shadow(0 0 8px rgba(122,162,255,.8))}
+.pk-card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;box-shadow:inset 0 0 0 1px rgba(160,190,255,.14)}
+@keyframes pk-spin{to{--pk-a:360deg}}
+@media (prefers-reduced-motion:reduce){.pk-card::after{animation:none}}
+
+/* video */
+.vsl{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/9;background:#10131a;max-width:960px;margin:40px auto 0;cursor:pointer}
+.vsl .blur{position:absolute;inset:-20px;filter:blur(14px) brightness(.55);transform:scale(1.05)}
+.vsl .play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;box-shadow:0 20px 50px -10px rgba(0,0,0,.5);transition:transform .2s}
+.vsl:hover .play{transform:translate(-50%,-50%) scale(1.06)}
+.vsl .cap{position:absolute;left:22px;bottom:18px;color:#fff;font-size:14px;font-weight:500}
+.vsl .cap span{display:block;font-size:12px;color:rgba(255,255,255,.7);font-weight:400}
+
+/* form */
+.apply{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px}
+@media (max-width:860px){.apply{grid-template-columns:1fr;gap:28px}}
+.form{background:#fff;border-radius:18px;box-shadow:0 0 0 1px #e8e8eb,0 20px 50px -30px rgba(20,30,50,.25);padding:28px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.fgrid{grid-template-columns:1fr}}
+label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:#3b404a}
+input,select{height:44px;border-radius:10px;border:1px solid #e1e2e6;padding:0 12px;font:400 15px Inter,sans-serif;color:var(--ink);background:#fff;outline:none;transition:border .15s, box-shadow .15s}
+input:focus,select:focus{border-color:#9db6ff;box-shadow:0 0 0 4px rgba(47,107,255,.12)}
+.q{margin-top:18px}
+.q > span{display:block;font-size:13px;font-weight:500;color:#3b404a;margin-bottom:8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:inline-flex;align-items:center;height:38px;padding:0 14px;border-radius:10px;box-shadow:inset 0 0 0 1px #e1e2e6;font-size:14px;cursor:pointer;transition:all .15s;user-select:none}
+.opt input:checked + span{box-shadow:inset 0 0 0 1.5px var(--ink);background:#f7f7f8;font-weight:500}
+.opt input:focus-visible + span{box-shadow:inset 0 0 0 1.5px var(--blue),0 0 0 4px rgba(47,107,255,.15)}
+.err{color:var(--red);font-size:13px;margin-top:12px;min-height:18px}
+.result{display:none}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+@media (max-width:560px){.slots{grid-template-columns:1fr 1fr}}
+.day{border:1px solid var(--line);border-radius:12px;padding:10px}
+.day b{display:block;font-size:13px;font-weight:600}
+.day small{color:var(--mute);font-size:12px}
+.slot{display:block;width:100%;margin-top:6px;height:34px;border-radius:8px;border:1px solid #e1e2e6;background:#fff;font:500 13px Inter,sans-serif;cursor:pointer}
+.slot:hover{border-color:var(--ink)}
+.slot.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+
+.reveal-field{display:grid;grid-template-rows:0fr;opacity:0;margin-top:0;transition:grid-template-rows .35s ease,opacity .25s ease,margin-top .35s ease;overflow:hidden}
+.reveal-field.open{grid-template-rows:1fr;opacity:1;margin-top:12px}
+.rf-in{min-height:0;overflow:hidden;padding:2px}
+
+/* faq */
+details{border-top:1px solid var(--line);padding:22px 0}
+details:last-child{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;font-weight:500;font-size:17px;letter-spacing:-.01em;display:flex;justify-content:space-between;gap:20px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--soft);font-weight:400;font-size:22px;line-height:1;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{margin:12px 0 0;color:var(--mute);max-width:720px}
+.faqgrid{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px}
+@media (max-width:860px){.faqgrid{grid-template-columns:1fr;gap:24px}}
+
+/* final */
+.final{position:relative;overflow:hidden;text-align:center;padding:120px 24px;border-radius:0}
+.final .bgsky{position:absolute;inset:0;background:linear-gradient(180deg,#eef4fb 0%,#c3dbf2 40%,#86b3e6 100%)}
+.final svg{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:screen}
+.final > *:not(.bgsky):not(svg){position:relative}
+.final h2{font-size:clamp(38px,5.5vw,64px);letter-spacing:-.045em;line-height:1.02;font-weight:600;margin:0}
+@media (max-width:560px){.brand small{display:none}.hdr{padding:0 14px}.hdr .btn{height:36px;font-size:13px;padding:0 12px}}
+.btn{white-space:nowrap}
+footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:28px 32px;font-size:13px;color:var(--mute)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.bar{transition:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="creatio" viewBox="0 0 203.15 60"><path d="M11.26,49.83a17.24,17.24,0,1,1,23.5-25.22H42c-.07-.11-.15-.22-.22-.34a22.84,22.84,0,1,0,0,25.54l.41-.62H35.41A17.24,17.24,0,0,1,11.26,49.83Z" style="fill:#ef4724"/><path d="M201.74,35.18A17.78,17.78,0,1,0,200.1,52,17.75,17.75,0,0,0,201.74,35.18ZM185.33,54.45a12.4,12.4,0,1,1,12.39-12.39A12.41,12.41,0,0,1,185.33,54.45Z" style="fill:#ef4724"/><path d="M78.68,24.33A17.12,17.12,0,0,0,61.15,41c0,.37,0,.74,0,1.11C61.16,52.53,68.67,60,79.94,60a17.53,17.53,0,0,0,13.77-5.67l-3.48-4.08a13,13,0,0,1-10.08,4.21c-6.92,0-11.87-4.08-12.66-10.21H95.82A18.58,18.58,0,0,0,96,42.32C96,31.58,88.77,24.33,78.68,24.33ZM67.49,39.68a11.27,11.27,0,0,1,22.4,0Z" style="fill:#ef4724"/><path d="M62.07,24.33c-6.13,0-10.48,2.11-12.72,6.19V24.66H43.29V59.58h6.33V42.19c0-7.65,4.21-11.8,11-11.8a11.73,11.73,0,0,1,1.45.07Z" style="fill:#ef4724"/><path d="M150.52,54.64c-3.49,0-4.6-2.11-4.6-5.86V29.87h10V24.66h-10V14.42h-6.32V24.66h-2.17v5.21h2.17V49c0,7.05,3.15,10.93,10.2,10.93a9.61,9.61,0,0,0,6.78-2.44l-2-4.54A5.65,5.65,0,0,1,150.52,54.64Z" style="fill:#ef4724"/><rect x="158.9" y="24.66" width="6.33" height="34.92" style="fill:#ef4724"/><path d="M128.26,29.52a18.72,18.72,0,0,0-2.61-2.16,17.79,17.79,0,1,0,2.61,27.31v4.91h5.46V24.66h-5.46ZM115.67,54.45a12.4,12.4,0,1,1,12.4-12.39A12.41,12.41,0,0,1,115.67,54.45Z" style="fill:#ef4724"/><path d="M176.34,14.16l-24.48,5.68,7.29-5.68L129.28,0Z" style="fill:#0d2e4e"/><path d="M176.34,14.16H159.15L129.28,0Z" style="fill:#1b4680"/></symbol><symbol id="creatio-mono" viewBox="0 0 203.15 60"><path d="M11.26,49.83a17.24,17.24,0,1,1,23.5-25.22H42c-.07-.11-.15-.22-.22-.34a22.84,22.84,0,1,0,0,25.54l.41-.62H35.41A17.24,17.24,0,0,1,11.26,49.83Z" fill="currentColor"/><path d="M201.74,35.18A17.78,17.78,0,1,0,200.1,52,17.75,17.75,0,0,0,201.74,35.18ZM185.33,54.45a12.4,12.4,0,1,1,12.39-12.39A12.41,12.41,0,0,1,185.33,54.45Z" fill="currentColor"/><path d="M78.68,24.33A17.12,17.12,0,0,0,61.15,41c0,.37,0,.74,0,1.11C61.16,52.53,68.67,60,79.94,60a17.53,17.53,0,0,0,13.77-5.67l-3.48-4.08a13,13,0,0,1-10.08,4.21c-6.92,0-11.87-4.08-12.66-10.21H95.82A18.58,18.58,0,0,0,96,42.32C96,31.58,88.77,24.33,78.68,24.33ZM67.49,39.68a11.27,11.27,0,0,1,22.4,0Z" fill="currentColor"/><path d="M62.07,24.33c-6.13,0-10.48,2.11-12.72,6.19V24.66H43.29V59.58h6.33V42.19c0-7.65,4.21-11.8,11-11.8a11.73,11.73,0,0,1,1.45.07Z" fill="currentColor"/><path d="M150.52,54.64c-3.49,0-4.6-2.11-4.6-5.86V29.87h10V24.66h-10V14.42h-6.32V24.66h-2.17v5.21h2.17V49c0,7.05,3.15,10.93,10.2,10.93a9.61,9.61,0,0,0,6.78-2.44l-2-4.54A5.65,5.65,0,0,1,150.52,54.64Z" fill="currentColor"/><rect x="158.9" y="24.66" width="6.33" height="34.92" fill="currentColor"/><path d="M128.26,29.52a18.72,18.72,0,0,0-2.61-2.16,17.79,17.79,0,1,0,2.61,27.31v4.91h5.46V24.66h-5.46ZM115.67,54.45a12.4,12.4,0,1,1,12.4-12.39A12.41,12.41,0,0,1,115.67,54.45Z" fill="currentColor"/><path d="M176.34,14.16l-24.48,5.68,7.29-5.68L129.28,0Z" fill="currentColor"/><path d="M176.34,14.16H159.15L129.28,0Z" fill="currentColor"/></symbol></svg>
+
+<div class="note">Borrador para revisión · datos de demostración, sin nombres de clientes</div>
+
+<header>
+  <div class="hdr">
+    <a class="brand" href="#top" aria-label="Expediente digital, inicio">
+      <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9cb9ff"/><stop offset=".55" stop-color="#4f7cf5"/><stop offset="1" stop-color="#1f45c9"/></linearGradient></defs><path d="M17 8h30l8 8-1.3 4H13z" fill="url(#lg)"/><path d="M47 8v8h8z" fill="#c9d8ff"/><path d="M12 26h26l-4 12H8z" fill="url(#lg)" opacity=".8"/><path d="M7 44h38l-4 12H3z" fill="url(#lg)"/></svg>
+      <span>Expediente <span style="color:var(--mute);font-weight:500">digital</span></span>
+    </a>
+    <a class="btn btn-dark btn-shiny" href="#aplicar">Agenda una demo</a>
+  </div>
+</header>
+
+<div class="shell" id="top">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="pill rv"><b>Nuevo</b> Para equipos que ya trabajan en <svg class="cr" height="14" viewBox="0 0 203.15 60" role="img" aria-label="Creatio"><use href="#creatio"/></svg> <span>→</span></span>
+    <h1 class="rv">Ningún <span class="rot" id="rot" aria-live="polite"><span class="rot-w on">crédito</span><span class="rot-w">préstamo</span><span class="rot-w">proveedor</span><span class="rot-w">contrato</span><span class="rot-w">expediente</span></span> más aprobado con un documento vencido.</h1>
+    <p class="lead rv">¿Cuántos expedientes en tu Creatio tienen hoy una cédula vencida o una carta sin verificar? <strong>Expediente digital</strong> te lo dice antes que la auditoría y no deja avanzar el proceso hasta que todo esté completo y vigente.</p>
+    <div class="ctas rv">
+      <a class="btn btn-dark btn-shiny btn-lg" href="#aplicar">Agenda una demo</a>
+      <a class="btn btn-light btn-lg" href="#video">Ver el video</a>
+    </div>
+    <p class="fine rv">Construido por un equipo con más de 25 años de trayectoria · socio integrador de Creatio</p>
+  </div>
+
+  <div class="sky rv">
+    <div class="bgsky"></div><div class="sun"></div>
+    <svg class="clouds" aria-hidden="true" preserveAspectRatio="none">
+      <filter id="cl" x="0" y="0" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency=".004 .012" numOctaves="5" seed="8"/>
+        <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.7 -.78"/>
+        <feGaussianBlur stdDeviation="1.2"/>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#cl)"/>
+    </svg>
+
+    <div class="win" role="img" aria-label="Panel de inicio del Expediente digital dentro de Creatio, con datos de demostración">
+      <div class="wbar"><i></i><i></i><i></i><span style="display:flex;align-items:center;gap:8px"><svg class="cr" height="12" viewBox="0 0 203.15 60" role="img" aria-label="Creatio"><use href="#creatio"/></svg><span style="margin:0">/ Expediente digital</span></span></div>
+      <div class="app">
+        <div class="side">
+          <div class="ws">Expediente digital</div>
+          <div class="nav-i on"><em style="background:#f08a3c"></em>Principal</div>
+          <div class="nav-i"><em style="background:#2fb36f"></em>Documentos</div>
+          <div class="nav-i"><em style="background:#3d74e8"></em>Expedientes</div>
+        </div>
+        <div class="main">
+          <div class="mt"><h4>Inicio de Expediente digital</h4><span class="chip">Últimos 12 meses</span></div>
+          <div class="kpis">
+            <div class="kpi"><b data-count="10">0</b><small>Activos</small></div>
+            <div class="kpi"><b data-count="8">0</b><small>En progreso</small></div>
+            <div class="kpi"><b data-count="8">0</b><small>Incompletos</small></div>
+            <div class="kpi"><b data-count="10">0</b><small>Por verificar</small></div>
+            <div class="kpi warn"><b data-count="11">0</b><small>Vencen en 30 días</small></div>
+            <div class="kpi bad"><b data-count="5">0</b><small>Vencidos</small></div>
+          </div>
+          <div class="charts">
+            <div class="card"><h5>Expedientes por estado</h5>
+              <div class="donut"></div>
+              <div class="legend"><span><i style="background:#2f6bff"></i>Activo</span><span><i style="background:#7aa2ff"></i>En progreso</span><span><i style="background:#b9c9f5"></i>Archivado</span><span><i style="background:#f0b44c"></i>Borrador</span><span><i style="background:#e66b5f"></i>Cancelado</span></div>
+            </div>
+            <div class="card"><h5>Expedientes por tipo</h5>
+              <div class="bars" id="bars"><div class="bar" data-h="100"></div><div class="bar" data-h="62"></div><div class="bar" data-h="88"></div><div class="bar" data-h="25"></div><div class="bar" data-h="50"></div></div>
+              <div class="blabels"><span>Solicitud de crédito</span><span>Colaborador</span><span>Hipoteca</span><span>Selección</span><span>Proveedor</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VSL -->
+  <section class="pad" id="video">
+    <div class="statement rv"><h2>Mira un expediente pasar de borrador a completo. <span class="g">Sobre la app real, con datos de demostración.</span></h2></div>
+    <div class="vsl rv" style="cursor:auto">
+      <video src="vsl.mp4" poster="poster.jpg" controls playsinline preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#0d0f13" aria-label="Video ilustrativo de Expediente digital"></video>
+    </div>
+    <div class="ctas rv" style="margin-top:28px">
+      <a class="btn btn-dark btn-shiny btn-lg" href="#aplicar">Quiero verlo con mis expedientes</a>
+    </div>
+  </section>
+
+  <!-- PROBLEM STATEMENT -->
+  <section class="pad statement">
+    <h2 class="rv">El cliente está en Creatio. <span class="g">Sus documentos, en correos, carpetas compartidas y en "archivo 5, bandeja 3". Nadie sabe qué venció hasta que llega la auditoría.</span></h2>
+  </section>
+
+  <!-- FEATURE 1: config -->
+  <section class="pad feat">
+    <h3 class="rv">Se configura, no se programa. <span class="g">Tipos de dato, tipos de documento con su vigencia y tipos de expediente con los documentos que exige cada uno.</span></h3>
+    <div class="stage rv">
+      <div class="ui">
+        <div class="ui-h">Configuración<span class="k">Rol: configurador</span></div>
+        <div class="tabs"><span class="tab">Tipos de dato</span><span class="tab">Tipos de documento</span><span class="tab on">Tipos de expediente</span></div>
+        <div class="row"><div><div class="t">Solicitud de crédito</div><div class="s">Exige: identificación, carta de empleo, comprobante de domicilio</div></div><span class="tag n">3 documentos</span></div>
+        <div class="row"><div><div class="t">Expediente de colaborador</div><div class="s">Exige: identificación, contrato, certificado de estudios</div></div><span class="tag n">3 documentos</span></div>
+        <div class="row"><div><div class="t">Alta de proveedor</div><div class="s">Exige: registro mercantil, paz y salvo, referencia bancaria</div></div><span class="tag n">3 documentos</span></div>
+        <div class="row"><div><div class="t">Selección de personal</div><div class="s">Exige: identificación, carta de empleo</div></div><span class="tag n">2 documentos</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE 2: completeness -->
+  <section class="pad feat">
+    <h3 class="rv">El expediente no avanza a medias. <span class="g">Nace en borrador. Sin los datos obligatorios no se mueve, y cuando llega a 100 % pasa solo a "En progreso".</span></h3>
+    <div class="stage rv">
+      <div class="two">
+        <div class="ui">
+          <div class="ui-h">EXP-00093 · Solicitud de crédito<span class="k">Andrea Morales</span></div>
+          <div class="steps" id="steps"><div class="st cur">Borrador</div><div class="st">En progreso</div><div class="st">Activo</div><div class="st">Archivado</div></div>
+          <div class="row"><div><div class="t">Identificación</div><div class="s">v1 · vence el 21/11/2026</div></div><span class="tag wait" id="d1">Por verificar</span></div>
+          <div class="row"><div><div class="t">Carta de empleo</div><div class="s">Emitida el 02/11/2026</div></div><span class="tag no" id="d2">Falta</span></div>
+          <div class="row"><div><div class="t">Comprobante de domicilio</div><div class="s">Recibo de luz</div></div><span class="tag no" id="d3">Falta</span></div>
+        </div>
+        <div class="ui">
+          <div class="ui-h">Completitud</div>
+          <div class="ring" id="ring" style="--p:0"><div id="ringv">0 %</div></div>
+          <div class="side-note" id="ringnote">Ubicación física: archivo 5, bandeja 3</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE 3: expiry -->
+  <section class="pad feat">
+    <h3 class="rv">Los vencimientos avisan antes. <span class="g">Cada documento dice cuántos días le quedan, y la consulta "vencen en 30 días" arma la cola de trabajo por ti.</span></h3>
+    <div class="stage rv">
+      <div class="ui">
+        <div class="ui-h">Vencen en los próximos 30 días<span class="k">11 documentos</span></div>
+        <div class="row"><div><div class="t">Identificación · Andrea Morales</div><div class="s">EXP-00093 · Solicitud de crédito</div></div><span class="tag no">Te faltan 6 días</span></div>
+        <div class="row"><div><div class="t">Póliza de seguro · Luis Herrera</div><div class="s">EXP-00071 · Hipoteca</div></div><span class="tag wait">12 días</span></div>
+        <div class="row"><div><div class="t">Paz y salvo · Distribuidora Ríos</div><div class="s">EXP-00058 · Alta de proveedor</div></div><span class="tag wait">19 días</span></div>
+        <div class="row"><div><div class="t">Contrato · Mariela Pérez</div><div class="s">EXP-00044 · Colaborador</div></div><span class="tag n">27 días</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE 4: verify + versions -->
+  <section class="pad feat">
+    <h3 class="rv">Quién verificó, cuándo, y todas las versiones. <span class="g">Carga uno, verifica otro y queda el registro. Si el documento vence, entra la versión 2 y la anterior se guarda.</span></h3>
+    <div class="stage rv">
+      <div class="ui">
+        <div class="ui-h">Identificación · Andrea Morales<span class="k">Historial de versiones</span></div>
+        <div class="row"><div><div class="t">Versión 2 · vigente</div><div class="s">Cargada el 14/11/2026 · verificada por M. Rivas el 14/11/2026, 10:42</div></div><span class="tag ok">Verificado</span></div>
+        <div class="row"><div><div class="t">Versión 1</div><div class="s">Cargada el 03/02/2021 · verificada por J. Castillo el 04/02/2021</div></div><span class="tag n">Vencida</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section>
+    <div class="stats">
+      <div class="stat rv"><b>3</b><span>niveles de configuración, sin programar</span></div>
+      <div class="stat rv"><b>4</b><span>roles: administrador, configurador, resolutor y visualizador</span></div>
+      <div class="stat rv"><b>30</b><span>días de aviso antes de que un documento venza</span></div>
+      <div class="stat rv"><b>2</b><span>idiomas: español e inglés</span></div>
+    </div>
+  </section>
+
+  <!-- REUSE -->
+  <section class="pad feat">
+    <div class="kicker rv">El expediente queda vivo</div>
+    <h3 class="rv">Si el cliente vuelve por otro crédito, solo firma. <span class="g">Sus documentos vigentes ya están verificados en el expediente, y el nuevo proceso los toma de ahí.</span></h3>
+    <div class="stage rv">
+      <div class="reuse">
+        <div class="ui"><div class="ui-h">EXP-00093<span class="k">Activo</span></div>
+          <div class="row"><div class="t">Identificación</div><span class="tag ok">Vigente</span></div>
+          <div class="row"><div class="t">Carta de empleo</div><span class="tag ok">Vigente</span></div>
+          <div class="row"><div class="t">Comprobante de domicilio</div><span class="tag ok">Vigente</span></div>
+        </div>
+        <div class="ui"><div class="ui-h">Nueva solicitud · segundo crédito<span class="k">Hoy</span></div>
+          <div class="row"><div><div class="t">3 de 3 documentos reutilizados</div><div class="s">Tomados de EXP-00093</div></div><span class="tag ok">Completo</span></div>
+          <div class="row"><div class="t">Siguiente paso</div><span class="tag n">Firma del cliente</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <section class="auth">
+    <div class="auth-in">
+      <div class="auth-top"><div><div class="kicker rv" style="color:#8fb0ff">Quién está detrás</div>
+      <h2 class="rv">Más de 25 años ejecutando lo que otros solo recomiendan.</h2>
+      <p class="auth-lead rv">Expediente digital no nació en una presentación. Lo construyó un equipo que lleva más de dos décadas implementando sistemas críticos en banca, seguros, telecomunicaciones y logística en Latinoamérica, y que sabe lo que cuesta un documento que nadie revisó a tiempo.</p></div><div class="peak-wrap rv"><div id="peak"></div></div></div>
+      <div class="pillars">
+        <div class="pz rv">
+          <svg class="pz-ic" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 40V22M18 40V14M28 40V24M38 40V8" stroke="url(#ag)" stroke-width="5" stroke-linecap="round"/></svg>
+          <h4>+25 años</h4><p>Implementando procesos donde un error se paga caro: crédito, pólizas, cumplimiento.</p>
+        </div>
+        <div class="pz rv">
+          <svg class="pz-ic" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5l15 6v11c0 10-6.5 17-15 21-8.5-4-15-11-15-21V11z" fill="none" stroke="url(#ag)" stroke-width="3.5" stroke-linejoin="round"/><path d="M17 24l5 5 9-10" fill="none" stroke="url(#ag)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="color:#fff;margin-top:16px"><svg class="cr" height="18" viewBox="0 0 203.15 60" role="img" aria-label="Creatio"><use href="#creatio-mono"/></svg></div><h4 style="margin-top:12px">Socio integrador oficial</h4><p>En el catálogo oficial de partners. Conocemos la plataforma por dentro, no solo la usamos.</p>
+        </div>
+        <div class="pz rv">
+          <svg class="pz-ic" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="9" width="24" height="30" rx="4" fill="none" stroke="url(#ag)" stroke-width="3.5"/><rect x="18" y="5" width="24" height="30" rx="4" fill="none" stroke="url(#ag)" stroke-width="3.5" opacity=".6"/></svg>
+          <h4>Probado en dos plataformas</h4><p>El mismo expediente ya corre sobre plataforma propia y sobre Creatio, con manual de cada estado.</p>
+        </div>
+        <div class="pz rv">
+          <svg class="pz-ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="17" cy="16" r="7" fill="none" stroke="url(#ag)" stroke-width="3.5"/><circle cx="33" cy="20" r="6" fill="none" stroke="url(#ag)" stroke-width="3.5" opacity=".6"/><path d="M5 40c1.5-7 6-11 12-11s10.5 4 12 11M29 40c1-5 4-8 9-8" fill="none" stroke="url(#ag)" stroke-width="3.5" stroke-linecap="round"/></svg>
+          <h4>Quien lo construye, lo implementa</h4><p>Sin intermediarios: el mismo equipo lo configura contigo y le da soporte después.</p>
+        </div>
+      </div>
+      <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="ag" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9d8ff"/><stop offset=".5" stop-color="#7aa2ff"/><stop offset="1" stop-color="#2f5bea"/></linearGradient></defs></svg>
+      <div class="auth-foot">
+        <div class="logos rv">
+          <div class="logo">[Logo de cliente · con aprobación]</div><div class="logo">[Logo de cliente · con aprobación]</div><div class="logo">[Logo de cliente · con aprobación]</div>
+        </div>
+        <div class="quote rv">
+          <p>[Testimonio de un cliente sobre el expediente, pendiente de aprobación escrita.]</p>
+          <small>[Nombre] · [Cargo], [Sector]</small>
+        </div>
+      </div>
+      <div class="ctas rv" style="justify-content:flex-start;margin-top:36px"><a class="btn btn-shiny btn-lg" href="#aplicar">Agenda una demo con el equipo</a></div>
+    </div>
+  </section>
+
+  <!-- APPLY -->
+  <section class="pad" id="aplicar">
+    <div class="apply">
+      <div class="rv">
+        <h3 style="font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.035em;font-weight:600;margin:0">Trae un expediente real. <span class="g" style="font-weight:500">Te mostramos cómo quedaría.</span></h3>
+        <p style="color:var(--mute);margin:18px 0 0;max-width:420px">Demo de 30 minutos sobre tu proceso, no una genérica. Contesta cuatro preguntas para que llegue la persona correcta a la llamada.</p>
+        <ul style="margin:28px 0 0;padding:0;list-style:none;display:grid;gap:12px;font-size:14px;color:#3b404a">
+          <li>✓&nbsp; Revisamos cómo armas hoy tus expedientes</li>
+          <li>✓&nbsp; Configuramos en vivo uno de tus tipos de expediente</li>
+          <li>✓&nbsp; Si no encaja con tu operación, te lo decimos en la llamada</li>
+        </ul>
+      </div>
+
+      <div class="form rv">
+        <form id="f" novalidate>
+          <div id="step1">
+            <div class="fgrid">
+              <label>Nombre<input name="nombre" autocomplete="name" required></label>
+              <label>Correo de trabajo<input name="correo" type="email" autocomplete="email" required></label>
+              <label>Institución<input name="empresa" autocomplete="organization" required></label>
+              <label>Cargo<input name="cargo" autocomplete="organization-title" required></label>
+            </div>
+            <div class="q"><span>¿Qué tipo de institución es?</span><div class="opts">
+              <label class="opt"><input type="radio" name="tipo" value="banco"><span>Banco</span></label>
+              <label class="opt"><input type="radio" name="tipo" value="financiera"><span>Financiera o cooperativa</span></label>
+              <label class="opt"><input type="radio" name="tipo" value="aseguradora"><span>Aseguradora</span></label>
+              <label class="opt"><input type="radio" name="tipo" value="otra"><span>Otra empresa</span></label>
+            </div>
+            <div id="industria-wrap" class="reveal-field" aria-hidden="true"><label class="rf-in">¿De qué industria o nicho?<input name="industria" id="industria" placeholder="Ej.: salud, gobierno, logística, educación" tabindex="-1"></label></div>
+            </div>
+            <div class="q"><span>¿Usan Creatio hoy?</span><div class="opts">
+              <label class="opt"><input type="radio" name="creatio" value="si"><span>Sí, en producción</span></label>
+              <label class="opt"><input type="radio" name="creatio" value="impl"><span>Lo estamos implementando</span></label>
+              <label class="opt"><input type="radio" name="creatio" value="no"><span>No</span></label>
+            </div></div>
+            <div class="q"><span>Expedientes nuevos al mes</span><div class="opts">
+              <label class="opt"><input type="radio" name="vol" value="1"><span>Menos de 100</span></label>
+              <label class="opt"><input type="radio" name="vol" value="2"><span>100 a 1.000</span></label>
+              <label class="opt"><input type="radio" name="vol" value="3"><span>Más de 1.000</span></label>
+            </div></div>
+            <div class="q"><span>¿Cuándo quieren empezar?</span><div class="opts">
+              <label class="opt"><input type="radio" name="cuando" value="ya"><span>Este trimestre</span></label>
+              <label class="opt"><input type="radio" name="cuando" value="6m"><span>En los próximos 6 meses</span></label>
+              <label class="opt"><input type="radio" name="cuando" value="exp"><span>Solo estamos explorando</span></label>
+            </div></div>
+            <input type="hidden" name="fuente" id="fuente" value="directo">
+            <div class="err" id="err" role="alert"></div>
+            <button class="btn btn-dark btn-shiny btn-lg" style="width:100%;margin-top:6px" type="submit">Continuar</button>
+            <p class="fine" style="text-align:center;margin-top:12px">Siguiente paso: eliges el horario.</p>
+          </div>
+
+          <div class="result" id="r-book">
+            <h4 style="margin:0;font-size:20px;letter-spacing:-.02em" id="r-title">Elige tu horario</h4>
+            <p style="color:var(--mute);margin:8px 0 0;font-size:14px" id="r-sub">Demo de 30 minutos. Te enviamos la invitación al correo.</p>
+            <div id="cal-inline" style="display:none;min-height:560px;margin-top:14px;border-radius:12px;overflow:hidden"></div>
+            <div class="slots" id="slots"></div>
+            <button class="btn btn-dark btn-shiny btn-lg" style="width:100%;margin-top:18px" type="button" id="confirm" disabled>Confirmar demo</button>
+          </div>
+
+          <div class="result" id="r-done">
+            <h4 style="margin:0;font-size:20px;letter-spacing:-.02em">Listo, tu demo quedó agendada.</h4>
+            <p style="color:var(--mute);margin:8px 0 0;font-size:14px" id="done-sub"></p>
+            <p style="margin:18px 0 0;font-size:14px">Antes de la llamada: mira el video y ten a mano un expediente que quieras configurar.</p>
+            <p class="fine">Borrador: este formulario aún no envía datos.</p>
+          </div>
+
+          <div class="result" id="r-nurture">
+            <h4 style="margin:0;font-size:20px;letter-spacing:-.02em">Gracias. Te escribimos con calma.</h4>
+            <p style="color:var(--mute);margin:8px 0 0;font-size:14px">Como están explorando, te enviamos el manual del expediente y un caso de uso por correo. Cuando quieran ver la demo, basta con responder.</p>
+            <p class="fine">Borrador: este formulario aún no envía datos.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="pad">
+    <div class="faqgrid">
+      <h3 class="rv" style="font-size:clamp(28px,3vw,38px);letter-spacing:-.035em;line-height:1.1;font-weight:600;margin:0">Respuestas antes de que preguntes.</h3>
+      <div class="rv">
+        <details open><summary>¿Necesito tener Creatio?</summary><p>Esta versión es una app para el Marketplace de Creatio. Si no tienes Creatio, existe la misma solución sobre plataforma propia; marca "No" en el formulario y te mostramos esa versión.</p></details>
+        <details><summary>¿Se adapta a mis tipos de documento?</summary><p>Sí. Los tipos de dato, de documento y de expediente se configuran sin programar, con los campos y la vigencia que pida tu proceso.</p></details>
+        <details><summary>¿Quién puede ver y cambiar cada expediente?</summary><p>Hay cuatro roles: administrador, configurador, resolutor y visualizador. Cada uno ve y hace solo lo que le corresponde.</p></details>
+        <details><summary>¿Lee los documentos automáticamente?</summary><p>La lectura automática (OCR) está en camino. Hoy se registran los datos clave de cada documento al cargarlo.</p></details>
+        <details><summary>¿Cuánto cuesta?</summary><p>[Planes desde: por definir.]</p></details>
+        <details><summary>¿Viene con manual?</summary><p>Sí. Se entrega con un manual que explica cada estado del expediente y cuándo se pasa de uno a otro.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="final">
+    <div class="bgsky"></div>
+    <svg aria-hidden="true" preserveAspectRatio="none"><filter id="cl2" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".004 .014" numOctaves="5" seed="3"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.7 -.8"/></filter><rect width="100%" height="100%" filter="url(#cl2)"/></svg>
+    <h2 class="rv">Menos carpetas.<br>Más expedientes completos.</h2>
+    <div class="ctas rv"><a class="btn btn-dark btn-shiny btn-lg" href="#aplicar">Agenda una demo</a></div>
+  </section>
+
+  <footer>
+    <span>Expediente digital para Creatio · construido por un equipo con más de 25 años de trayectoria</span>
+    <span>Creatio es una marca de su respectivo titular</span>
+  </footer>
+</div>
+
+<script>
+// reveal on scroll
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+// KPI count-up + bars
+function countUp(){document.querySelectorAll('[data-count]').forEach(el=>{const n=+el.dataset.count;let i=0;const t=setInterval(()=>{i++;el.textContent=i;if(i>=n)clearInterval(t)},60)});
+  document.querySelectorAll('#bars .bar').forEach((b,i)=>setTimeout(()=>b.style.height=b.dataset.h+'%',150+i*90));}
+const heroWin=document.querySelector('.win');
+new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){countUp();o.disconnect()}},{threshold:.3}).observe(heroWin);
+
+// completeness demo
+const steps=[...document.querySelectorAll('#steps .st')],ring=document.getElementById('ring'),rv=document.getElementById('ringv'),note=document.getElementById('ringnote');
+const d1=document.getElementById('d1'),d2=document.getElementById('d2'),d3=document.getElementById('d3');
+function setTag(el,cls,txt){el.className='tag '+cls;el.textContent=txt}
+function animTo(p){const s=parseFloat(getComputedStyle(ring).getPropertyValue('--p'))||0;const t0=performance.now();
+  (function f(t){const k=Math.min(1,(t-t0)/700);const v=s+(p-s)*(1-Math.pow(1-k,3));ring.style.setProperty('--p',v);rv.textContent=Math.round(v)+' %';if(k<1)requestAnimationFrame(f)})(t0)}
+function cycle(){
+  steps.forEach(s=>s.className='st');steps[0].classList.add('cur');
+  setTag(d1,'wait','Por verificar');setTag(d2,'no','Falta');setTag(d3,'no','Falta');animTo(0);note.textContent='Ubicación física: archivo 5, bandeja 3';
+  setTimeout(()=>{setTag(d1,'ok','Verificado');animTo(34);note.textContent='Verificado por M. Rivas'},1600);
+  setTimeout(()=>{setTag(d2,'ok','Verificado');animTo(67)},3000);
+  setTimeout(()=>{setTag(d3,'ok','Verificado');animTo(100)},4400);
+  setTimeout(()=>{steps[0].className='st done';steps[1].className='st cur';note.textContent='Pasó solo a "En progreso"'},5300);
+}
+let cyc=null;
+new IntersectionObserver(es=>{if(es[0].isIntersecting){if(!cyc){cycle();cyc=setInterval(cycle,9000)}}else{clearInterval(cyc);cyc=null}},{threshold:.4}).observe(document.getElementById('steps'));
+
+// VSL placeholder
+
+
+// traffic source (one page per source: ?utm_source=)
+try{const u=new URLSearchParams(location.search).get('utm_source');if(u)document.getElementById('fuente').value=u.slice(0,40)}catch(e){}
+
+// application + routing
+const f=document.getElementById('f'),err=document.getElementById('err');
+function show(id){['step1','r-book','r-done','r-nurture'].forEach(x=>document.getElementById(x).style.display=x===id?'block':'none')}
+f.addEventListener('submit',e=>{
+  e.preventDefault();
+  const fd=new FormData(f);
+  for(const k of ['nombre','correo','empresa','cargo']) if(!String(fd.get(k)||'').trim()){err.textContent='Completa tus datos de contacto.';return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fd.get('correo'))){err.textContent='Revisa el correo.';return}
+  for(const k of ['tipo','creatio','vol','cuando']) if(!fd.get(k)){err.textContent='Responde las cuatro preguntas.';return}
+  if(fd.get('tipo')==='otra'&&!String(fd.get('industria')||'').trim()){err.textContent='Cuéntanos tu industria o nicho.';document.getElementById('industria').focus();return}
+  err.textContent='';
+  if(fd.get('cuando')==='exp'){show('r-nurture');return}
+  if(fd.get('creatio')==='no'){document.getElementById('r-title').textContent='Te mostramos la versión en plataforma propia';document.getElementById('r-sub').textContent='Es la misma solución sin necesidad de Creatio. Elige tu horario.'}
+  try{sessionStorage.setItem('ed_lead',JSON.stringify({nombre:fd.get('nombre'),correo:fd.get('correo'),empresa:fd.get('empresa'),creatio:fd.get('creatio'),fuente:fd.get('fuente')}))}catch(_){}
+  show('r-book');
+  if(CAL_LINK){openCal(fd)}else{buildSlots(fd.get('vol')==='3'||fd.get('tipo')==='banco')}
+});
+
+// "Otra empresa" abre el campo de industria
+(function(){const w=document.getElementById('industria-wrap'),inp=document.getElementById('industria');
+ document.querySelectorAll('input[name="tipo"]').forEach(r=>r.addEventListener('change',()=>{const on=r.value==='otra'&&r.checked;
+  w.classList.toggle('open',on);w.setAttribute('aria-hidden',on?'false':'true');inp.tabIndex=on?0:-1;if(on)setTimeout(()=>inp.focus(),200);else inp.value=''}));})();
+
+let pick=null,pickIso='';
+function buildSlots(priority){
+  const box=document.getElementById('slots');box.innerHTML='';const d=new Date();let n=0;
+  const hrs=priority?['9:00 a. m.','11:30 a. m.','3:00 p. m.']:['10:00 a. m.','2:30 p. m.'];
+  while(n<4){d.setDate(d.getDate()+1);const wd=d.getDay();if(wd===0||wd===6)continue;n++;
+    const col=document.createElement('div');col.className='day';
+    col.innerHTML='<b>'+d.toLocaleDateString('es',{weekday:'long'})+'</b><small>'+d.toLocaleDateString('es',{day:'numeric',month:'long'})+'</small>';
+    hrs.forEach(h=>{const b=document.createElement('button');b.type='button';b.className='slot';b.textContent=h;b.dataset.v=col.querySelector('b').textContent+' '+col.querySelector('small').textContent+', '+h;{const dd=new Date(d);const m=h.match(/(\d+):(\d+)\s*(a|p)/);let hh=+m[1];if(m[3]==='p'&&hh<12)hh+=12;dd.setHours(hh,+m[2],0,0);b.dataset.iso=dd.toISOString()}
+      b.onclick=()=>{box.querySelectorAll('.slot').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');pick=b.dataset.v;pickIso=b.dataset.iso;document.getElementById('confirm').disabled=false};col.appendChild(b)});
+    box.appendChild(col)}
+}
+document.getElementById('confirm').onclick=()=>goThanks(pick,pickIso);
+
+// ---- Cal.com: pega aquí tu enlace (ej.: 'tu-usuario/demo-expediente'). Vacío = selector de horarios de prueba.
+const CAL_LINK='jeremy-dupuy/30min';
+function goThanks(when,iso){try{sessionStorage.setItem('ed_booking',when||'');sessionStorage.setItem('ed_iso',iso||'')}catch(_){}location.href='gracias.html'}
+function openCal(fd){
+  document.getElementById('slots').style.display='none';document.getElementById('confirm').style.display='none';
+  const box=document.getElementById('cal-inline');box.style.display='block';
+  (function(C,A,L){let p=function(a,ar){a.q.push(ar)};let d=C.document;C.Cal=C.Cal||function(){let cal=C.Cal;let ar=arguments;if(!cal.loaded){cal.ns={};cal.q=cal.q||[];d.head.appendChild(d.createElement("script")).src=A;cal.loaded=true}if(ar[0]===L){const api=function(){p(api,arguments)};const namespace=ar[1];api.q=api.q||[];if(typeof namespace==="string"){cal.ns[namespace]=cal.ns[namespace]||api;p(cal.ns[namespace],ar);p(cal,["initNamespace",namespace])}else p(cal,ar);return}p(cal,ar)}})(window,"https://app.cal.com/embed/embed.js","init");
+  Cal("init",{origin:"https://cal.com"});
+  Cal("ui",{theme:"light",hideEventTypeDetails:false,layout:"month_view",cssVarsPerTheme:{light:{"cal-brand":"#1f45c9","cal-brand-emphasis":"#15171c","cal-brand-text":"#ffffff"}}});
+  Cal("inline",{elementOrSelector:"#cal-inline",calLink:CAL_LINK,config:{layout:"month_view",name:fd.get('nombre'),email:fd.get('correo'),notes:`${fd.get('empresa')} · ${fd.get('cargo')} · Creatio: ${fd.get('creatio')} · Volumen: ${fd.get('vol')} · Inicio: ${fd.get('cuando')}${fd.get('industria')?' · Industria: '+fd.get('industria'):''} · Fuente: ${fd.get('fuente')}`}});
+  // Si el calendario no carga (vista previa con red restringida), se muestran horarios de prueba y el enlace directo
+  setTimeout(()=>{if(!box.querySelector('iframe')){box.style.display='none';document.getElementById('slots').style.display='';document.getElementById('confirm').style.display='';buildSlots(fd.get('vol')==='3'||fd.get('tipo')==='banco');
+    const a=document.createElement('p');a.className='fine';a.style.cssText='text-align:center;margin-top:12px';a.innerHTML='¿No ves el calendario? <a href="https://cal.com/'+CAL_LINK+'" target="_blank" rel="noopener" style="color:var(--blue)">Ábrelo en Cal.com</a>';document.getElementById('confirm').after(a)}},6000);
+  Cal("on",{action:"bookingSuccessful",callback:e=>{let when='';try{const d=e.detail&&e.detail.data;const st=d&&(d.date||d.startTime||(d.booking&&d.booking.startTime));if(st){when=new Date(st).toLocaleString('es',{weekday:'long',day:'numeric',month:'long',hour:'numeric',minute:'2-digit'});var iso=new Date(st).toISOString()}}catch(_){}goThanks(when,iso)}});
+}
+
+// rotating headline word
+(function(){const box=document.getElementById('rot');if(!box)return;const ws=[...box.children];let i=0;
+ const fit=w=>{box.style.width=w.getBoundingClientRect().width+'px'};
+ const measure=()=>{const t=ws[i];const r=document.createRange();r.selectNodeContents(t);const w=r.getBoundingClientRect().width;box.style.width=Math.ceil(w+parseFloat(getComputedStyle(box).fontSize)*0.12)+'px'};
+ measure();addEventListener('resize',measure);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(measure);
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ setInterval(()=>{const cur=ws[i];cur.classList.remove('on');cur.classList.add('out');i=(i+1)%ws.length;const nx=ws[i];nx.classList.remove('out');
+  void nx.offsetWidth;nx.classList.add('on');measure();setTimeout(()=>cur.classList.remove('out'),750)},2200);})();
+
+// Peak chart (port of "Peak Chart" by Louis Studios, vanilla JS)
+(function(){
+const host=document.getElementById('peak');if(!host)return;
+const CW=540,CH=696,CR=56,HN=CH/CW,RN=CR/CW,BX=.32*CW,BY=.16*CW;
+const FIELD_FILL="#1678ff";
+const SH=[[[.4748,.8152,.7509,.8801,.7026],"#000000",1],[[.3741,.2723,.7371,.3009,.1168],"#020000",1],[[.7846,.0251,.3833,.1301,-.5566],"#2e85ff",.4756],[[.6206,-.2018,.1282,.5909,.2754],"#3584ff",.3146],[[.6,1.2391,.827,.2111,-1.6357],"#000d1e",1],[[.0964,.5388,1000,.1285,.5421],"#000005",.2298]];
+const RIMS=[[[.1207,-.0365,.0492],"#2667ff",1],[[.0667,-.0166,.0176],"#467dff",1],[[.037,-.0134,.0154],"#c2ffff",.8091]];
+const HALO={cx:.4996,cy:.6438,sx:.2498,sy:.2433,o:.845,c:"#0e50ff"},BREATH=.42,GRAIN=1.7;
+const PX0=20.29,PX1=503.69,PT=158.49,PB=385.28,LW=7.1,LC="#6496e2",LF=108,LP=1.44,LCEN=12,DR=13,DDX=8,DDY=2.6,GDX=40.64,GDY=40.07,GY0=468.7,GC="#5a87e1",GA=.23;
+const T_GRID=.9,T_D0=.25,T_D=2.1,T_N0=1,T_N=1.7,T_AR=2.65,T_REST=3.3;
+const DT="#2680ff",DM="#75aafa",DB="#d0e4fd",DG="#287dff",PC="#78afff";
+const c01=x=>x<0?0:x>1?1:x,sm=x=>{const t=c01(x);return t*t*(3-2*t)},eio=x=>{const t=c01(x);return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2},eo=x=>1-Math.pow(1-c01(x),3),bo=x=>{const t=c01(x),c=1.9;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
+function erf(x){const s=x<0?-1:1,a=Math.abs(x),t=1/(1+.3275911*a);return s*(1-((((1.061405429*t-1.453152027)*t+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-a*a))}
+const phi=x=>.5*(1+erf(x/Math.SQRT2));
+function sdf(u,v){const qx=Math.abs(u-.5)-(.5-RN),qy=Math.abs(v-HN/2)-(HN/2-RN),ox=Math.max(qx,0),oy=Math.max(qy,0);return Math.sqrt(ox*ox+oy*oy)+Math.min(Math.max(qx,qy),0)-RN}
+function rng(seed){let s=seed>>>0;return()=>{s=(s+0x6d2b79f5)>>>0;let t=s;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
+const rgb=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const rgba=(h,a)=>`rgba(${rgb(h).join(',')},${a.toFixed(4)})`;
+const mk=(w,h)=>{const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));return c};
+function buildField(px,seed){const w=Math.round(px),h=Math.round(px*HN),rest=mk(w,h),lift=mk(w,h),c1=rest.getContext('2d'),c2=lift.getContext('2d'),i1=c1.createImageData(w,h),i2=c2.createImageData(w,h),d1=i1.data,d2=i2.data,rand=rng(seed),fill=rgb(FIELD_FILL);
+ const shades=SH.map(([[cx,cy,sx,sy,th],col,a])=>({cx,cy,isx:1/Math.abs(sx),isy:1/Math.abs(sy),c:Math.cos(th),s:Math.sin(th),rgb:rgb(col),a}));
+ const rims=RIMS.map(([[off,sp,sg],col,a])=>({off,sp,sg,rgb:rgb(col),a})),k2=1+BREATH;
+ for(let j=0;j<h;j++){const v=(j+.5)/w;for(let i=0;i<w;i++){const u=(i+.5)/w;let r=fill[0],g=fill[1],b=fill[2];
+  for(const o of shades){const du=u-o.cx,dv=v-o.cy,x=(o.c*du+o.s*dv)*o.isx,y=(-o.s*du+o.c*dv)*o.isy,m=o.a*Math.exp(-.5*(x*x+y*y));r+=m*(o.rgb[0]-r);g+=m*(o.rgb[1]-g);b+=m*(o.rgb[2]-b)}
+  let r2=r,g2=g,b2=b;
+  for(const o of rims){const vs=v+o.off,dx=Math.min(u,1-u),dy=Math.min(vs,HN-vs),ratio=Math.min(1,phi((-sdf(u,vs)-o.sp)/o.sg)/Math.max(1e-9,phi((Math.min(dx,dy)-o.sp)/o.sg))),k=1-phi((dx-o.sp)/o.sg)*phi((dy-o.sp)/o.sg)*ratio,m=o.a*k;
+   r+=m*(o.rgb[0]-r);g+=m*(o.rgb[1]-g);b+=m*(o.rgb[2]-b);const m2=Math.min(1,m*k2);r2+=m2*(o.rgb[0]-r2);g2+=m2*(o.rgb[1]-g2);b2+=m2*(o.rgb[2]-b2)}
+  const n=(rand()+rand()+rand()-1.5)*2*GRAIN,p=(j*w+i)*4;d1[p]=r+n;d1[p+1]=g+n;d1[p+2]=b+n;d1[p+3]=255;d2[p]=r2+n;d2[p+1]=g2+n;d2[p+2]=b2+n;d2[p+3]=255}}
+ c1.putImageData(i1,0,0);c2.putImageData(i2,0,0);return{rest,lift}}
+function buildHalo(px){const s=.25,w=Math.max(8,Math.round((CW+2*BX)*px*s/CW)),h=Math.max(8,Math.round((CH+2*BY)*px*s/CW)),c=mk(w,h),ctx=c.getContext('2d'),img=ctx.createImageData(w,h),[hr,hg,hb]=rgb(HALO.c);
+ for(let j=0;j<h;j++){const v=((j+.5)/h*(CH+2*BY)-BY)/CW;for(let i=0;i<w;i++){const u=((i+.5)/w*(CW+2*BX)-BX)/CW,a=(u-HALO.cx)/HALO.sx,e=(v-HALO.cy)/HALO.sy,k=Math.exp(-.5*(a*a+e*e))*HALO.o,p=(j*w+i)*4;img.data[p]=hr;img.data[p+1]=hg;img.data[p+2]=hb;img.data[p+3]=Math.min(255,k*255)}}
+ ctx.putImageData(img,0,0);return c}
+function buildGrid(px){const w=Math.round(px),h=Math.round(px*HN),c=mk(w,h),ctx=c.getContext('2d'),s=px/CW;ctx.scale(s,s);ctx.strokeStyle=GC;ctx.lineWidth=1;ctx.beginPath();
+ for(let k=-6;k<=6;k++){const x=CW/2+GDX*k;ctx.moveTo(x,250);ctx.lineTo(x,CH)}
+ for(let k=-6;k<=6;k++){const y=GY0+GDY*k;if(y<250||y>CH)continue;ctx.moveTo(0,y);ctx.lineTo(CW,y)}ctx.stroke();
+ const mw=64,mh=Math.round(64*HN),m=mk(mw,mh),mc=m.getContext('2d'),img=mc.createImageData(mw,mh);
+ for(let j=0;j<mh;j++){const y=(j+.5)/mh*CH,my=sm((y-350)/230);for(let i=0;i<mw;i++){const x=(i+.5)/mw*CW,mx=Math.exp(-.5*Math.pow((x-CW/2)/92,2));img.data[(j*mw+i)*4+3]=Math.round(255*GA*mx*my)}}
+ mc.putImageData(img,0,0);ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation='destination-in';ctx.drawImage(m,0,0,w,h);return c}
+function buildCurve(vals){const n=vals.length;let lo=Infinity,hi=-Infinity,pk=0;for(let i=0;i<n;i++){if(vals[i]<lo)lo=vals[i];if(vals[i]>hi){hi=vals[i];pk=i}}
+ const span=hi-lo||1,yv=vals.map(v=>PT+(1-(v-lo)/span)*(PB-PT)),h=(PX1-PX0)/(n-1),sl=[];for(let i=0;i<n-1;i++)sl.push((yv[i+1]-yv[i])/h);
+ const m=[sl[0]];for(let i=1;i<n-1;i++){const a=sl[i-1],b=sl[i];m.push((Math.sign(a)+Math.sign(b))*Math.min(Math.abs(a),Math.abs(b),.25*Math.abs(a+b)))}m.push(sl[n-2]);
+ const ys=new Float32Array(CW+1);for(let x=0;x<=CW;x++){let y;if(x<=PX0)y=yv[0]+(x-PX0)*m[0];else if(x>=PX1)y=yv[n-1]+(x-PX1)*m[n-1];else{const t=(x-PX0)/h,i=Math.min(n-2,Math.floor(t)),f=t-i,f2=f*f,f3=f2*f;y=(2*f3-3*f2+1)*yv[i]+(f3-2*f2+f)*h*m[i]+(-2*f3+3*f2)*yv[i+1]+(f3-f2)*h*m[i+1]}ys[x]=y}
+ return{ys,peakX:PX0+pk*h}}
+const cy=(ys,x)=>{const xc=Math.max(0,Math.min(CW,x)),i=Math.min(CW-1,Math.floor(xc)),f=xc-i;return ys[i]*(1-f)+ys[i+1]*f};
+const la=d=>Math.exp(-Math.pow(Math.abs(d)/LF,LP));
+function inv(t){let lo=0,hi=1;for(let i=0;i<24;i++){const m=(lo+hi)/2;if(eio(m)<t)lo=m;else hi=m}return(lo+hi)/2}
+function frameAt(t){const f={grid:sm(t/T_GRID),draw:eio((t-T_D0)/T_D),dotS:bo((t-T_D0)/.4),dotA:sm((t-T_D0)/.2),num:eo((t-T_N0)/T_N),numA:sm((t-T_N0)/.45),numY:1-eo((t-T_N0)/.7),arrow:bo((t-T_AR)/.45),arrowA:sm((t-T_AR)/.18),breath:0};
+ if(t>T_REST)f.breath=.6*Math.pow(Math.sin(Math.PI*(t-T_REST)/7),2);return f}
+
+// trayectoria: steady climb, the dot rests at the latest point (illustrative, not a measured series)
+const DATA=[10,12,13,16,18,19,23,25,27,31,33,36,40,43,47,52,55,60,66,71,77,84,92,100];
+const width=Math.min(360,Math.max(260,host.parentElement.clientWidth-20)),u=width/CW,px=n=>(n*u).toFixed(3)+'px';
+const card=document.createElement('div');card.className='pk-card';card.style.cssText=`width:${width}px;height:${width*HN}px;border-radius:${px(CR)}`;
+const cv=document.createElement('canvas');card.appendChild(cv);
+const T=(txt,css)=>{const p=document.createElement('p');p.className='pk-t';p.textContent=txt;p.style.cssText=css;card.appendChild(p);return p};
+T('Trayectoria',`left:${px(45.6)};top:${px(43.6)};font-size:${px(18.6)};font-weight:400;color:#99a3b6`);
+T('Hoy',`right:${px(46)};top:${px(43.6)};font-size:${px(17)};font-weight:400;color:#acc1e7`);
+T('Años implementando sistemas',`left:0;right:0;text-align:center;top:${px(441.4)};font-size:${px(20.2)};font-weight:400;color:#9298a5`);
+const num=document.createElement('div');num.style.cssText=`position:absolute;left:0;right:0;top:${px(469)};display:flex;justify-content:center;opacity:0`;
+num.innerHTML=`<div style="position:relative;font:500 ${px(89.2)}/1 Inter,system-ui,sans-serif;letter-spacing:${px(-1.5)}"><span id="pkd" style="font-variant-numeric:tabular-nums">25</span><span>+</span><svg id="pka" viewBox="0 0 8 8" style="position:absolute;left:100%;margin-left:${px(6)};top:${px(16)};width:${px(8)};height:${px(8)};overflow:visible;transform-origin:0 100%;opacity:0"><path d="M.6 7.4 7.2.8M2 .6h5.4V6" fill="none" stroke="#93cfa2" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg></div>`;
+card.appendChild(num);
+T('En banca, seguros, telecomunicaciones y logística',`left:0;right:0;text-align:center;top:${px(565)};font-size:${px(14)};font-weight:400;color:#9299a8`);
+host.appendChild(card);
+const dig=num.querySelector('#pkd'),arr=num.querySelector('#pka');
+const ctx=cv.getContext('2d'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,dpr=Math.min(2,Math.max(1,devicePixelRatio||1));
+const bxc=Math.ceil(BX*u),byc=Math.ceil(BY*u),bx=bxc*dpr,by=byc*dpr;
+cv.width=Math.ceil(CW*u*dpr+2*bx);cv.height=Math.ceil(CH*u*dpr+2*by);cv.style.left=-bxc+'px';cv.style.top=-byc+'px';cv.style.width=cv.width/dpr+'px';cv.style.height=cv.height/dpr+'px';
+const {rest:field,lift:bright}=buildField(Math.min(width*dpr,Math.max(width,700)),11),grid=buildGrid(width*dpr),halo=buildHalo(width),C=buildCurve(DATA);
+const tLand=fr=>T_D0+T_D*inv(fr);
+let clock=reduce?T_REST+.01:0,started=reduce,visible=false,raf=0,last=performance.now();
+function rr(){ctx.beginPath();ctx.moveTo(CR,0);ctx.arcTo(CW,0,CW,CH,CR);ctx.arcTo(CW,CH,0,CH,CR);ctx.arcTo(0,CH,0,0,CR);ctx.arcTo(0,0,CW,0,CR);ctx.closePath()}
+function draw(dt){if(started&&!reduce)clock+=dt;const t=clock,F=started?frameAt(t):frameAt(0);if(reduce)F.breath=0;
+ dig.textContent=Math.round(25*F.num);num.style.opacity=F.numA;num.style.transform=`translateY(${(F.numY*5*u).toFixed(2)}px)`;const bl=Math.abs(F.numY)*6*u;num.style.filter=bl>.05?`blur(${bl.toFixed(2)}px)`:'';
+ arr.style.opacity=F.arrowA;arr.style.transform=`scale(${Math.max(0,F.arrow).toFixed(3)})`;
+ ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);const s=dpr*u;ctx.setTransform(s,0,0,s,bx,by);ctx.imageSmoothingQuality='high';
+ ctx.drawImage(halo,-BX,-BY,CW+2*BX,CH+2*BY);ctx.save();rr();ctx.clip();ctx.drawImage(field,0,0,CW,CH);
+ if(F.breath>.001){ctx.globalAlpha=F.breath;ctx.drawImage(bright,0,0,CW,CH)}
+ if(F.grid>.001){ctx.globalAlpha=F.grid;ctx.drawImage(grid,0,0,CW,CH)}ctx.globalAlpha=1;
+ const ys=C.ys,peakX=C.peakX,x1=F.draw*CW;
+ if(x1>.5){const g=ctx.createLinearGradient(0,0,CW,0),head=.95*(1-sm((F.draw-.8)/.2));
+  for(let i=0;i<=54;i++){const x=i/54*CW;let a=la(x-peakX-LCEN);if(head>.001&&x<=x1+10)a=Math.max(a,head*Math.exp(-Math.max(0,x1-x)/70));g.addColorStop(i/54,rgba(LC,a))}
+  ctx.strokeStyle=g;ctx.lineWidth=LW;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(0,cy(ys,0));for(let x=1;x<x1;x++)ctx.lineTo(x,ys[x]);ctx.lineTo(x1,cy(ys,x1));ctx.stroke()}
+ if(F.dotA>.001){const restX=peakX+DDX,dx=Math.min(x1,restX),dy=cy(ys,dx)+DDY*c01(dx/restX),since=t-tLand(restX/CW),pulse=since>0&&since<1.1&&!reduce?since/1.1:-1;
+  ctx.globalAlpha=F.dotA;ctx.translate(dx,dy);ctx.scale(F.dotS,F.dotS);const boost=pulse>=0?Math.sin(Math.PI*Math.min(1,pulse*1.6)):0;
+  const hg=ctx.createRadialGradient(0,0,0,0,0,30),ha=a=>rgba(DG,Math.min(1,a*(1+.9*boost)));
+  [[0,.47],[.5,.47],[17/30,.41],[19/30,.31],[21/30,.17],[23/30,.1],[25/30,.06],[27/30,.03],[1,0]].forEach(([o,a])=>hg.addColorStop(o,ha(a)));
+  ctx.fillStyle=hg;ctx.beginPath();ctx.arc(0,0,30,0,Math.PI*2);ctx.fill();
+  if(pulse>=0){ctx.strokeStyle=rgba(PC,.55*(1-pulse)*(1-pulse));ctx.lineWidth=2.2*(1-pulse)+.6;ctx.beginPath();ctx.arc(0,0,DR+26*eo(pulse),0,Math.PI*2);ctx.stroke()}
+  const bg=ctx.createLinearGradient(0,-DR,0,DR);bg.addColorStop(0,DT);bg.addColorStop(.45,DM);bg.addColorStop(1,DB);ctx.fillStyle=bg;ctx.beginPath();ctx.arc(0,0,DR,0,Math.PI*2);ctx.fill();
+  ctx.setTransform(s,0,0,s,bx,by);ctx.globalAlpha=1}
+ ctx.restore()}
+function tick(){raf=0;const now=performance.now(),dt=Math.min(.1,Math.max(0,(now-last)/1000));last=now;draw(dt);if(visible&&!document.hidden&&started&&!reduce)raf=requestAnimationFrame(tick)}
+const kick=()=>{if(!raf&&visible&&!document.hidden){last=performance.now();raf=requestAnimationFrame(tick)}};
+draw(0);
+new IntersectionObserver(([e])=>{visible=e.isIntersecting;if(visible){started=true;kick()}else if(raf){cancelAnimationFrame(raf);raf=0}},{threshold:.35}).observe(card);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)kick()});
+})();
+
+</script>
+</body>
+</html>
