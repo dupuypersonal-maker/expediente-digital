@@ -256,6 +256,8 @@ h1{font-size:clamp(40px,6.4vw,76px);line-height:1.02;letter-spacing:-.045em;font
 @media (max-width:600px){.blabels .lg{display:none}.blabels .sh{display:inline}.blabels span{font-size:10.5px;min-width:0;white-space:nowrap;text-align:center}}
 @media (max-width:380px){.pill{font-size:11px}.st{font-size:9.5px}}
 
+.hero-vsl{margin-top:44px}.hero-vsl .vsl{max-width:980px;margin:0 auto}
+#video .sky{margin-top:34px}
 /* video */
 .vsl{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/9;background:#10131a;max-width:960px;margin:40px auto 0;cursor:pointer}
 .vsl .blur{position:absolute;inset:-20px;filter:blur(14px) brightness(.55);transform:scale(1.05)}
@@ -346,14 +348,21 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
     <span class="pill rv"><b>Nuevo</b> <em class="pt">Para equipos que ya trabajan en <svg class="cr cr-pill" height="15" viewBox="0 0 203.15 60" role="img" aria-label="Creatio"><use href="#creatio"/></svg></em> <span>→</span></span>
     <h1 class="rv">Ningún <span class="rot" id="rot" aria-live="polite"><span class="rot-w on">crédito</span><span class="rot-w">préstamo</span><span class="rot-w">proveedor</span><span class="rot-w">contrato</span><span class="rot-w">expediente</span></span> más aprobado con un documento vencido.</h1>
     <p class="lead rv">¿Cuántos expedientes en tu Creatio tienen hoy una cédula vencida o una carta sin verificar? <strong>Expediente digital</strong> te lo dice antes que la auditoría y no deja avanzar el proceso hasta que todo esté completo y vigente.</p>
-    <div class="ctas rv">
-      <a class="btn btn-dark btn-shiny btn-lg" href="#aplicar">Agenda una demo</a>
-      <a class="btn btn-light btn-lg" href="#video">Ver el video</a>
-    </div>
+    
     <p class="fine rv">Construido por un equipo con más de 25 años de trayectoria · socio integrador de Creatio</p>
   </div>
 
-  <div class="sky rv">
+  <div class="hero-vsl"><div class="vsl rv" style="cursor:auto">
+      <video src="vsl.mp4" poster="poster.jpg" controls playsinline preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#0d0f13" aria-label="Video ilustrativo de Expediente digital"></video>
+    </div>
+    <div class="ctas rv" style="margin-top:28px;justify-content:center">
+      <a class="btn btn-dark btn-shiny btn-lg" href="#aplicar">Agenda una demo</a>
+    </div></div>
+
+  <!-- APP -->
+  <section class="pad" id="video">
+    <div class="statement rv"><h2>Así se ve por dentro. <span class="g">El inicio de Expediente digital, con datos de demostración.</span></h2></div>
+    <div class="sky rv">
     <div class="bgsky"></div><div class="sun"></div>
     <svg class="clouds" aria-hidden="true" preserveAspectRatio="none">
       <filter id="cl" x="0" y="0" width="100%" height="100%">
@@ -397,16 +406,6 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
       </div>
     </div>
   </div>
-
-  <!-- VSL -->
-  <section class="pad" id="video">
-    <div class="statement rv"><h2>Mira un expediente pasar de borrador a completo. <span class="g">Sobre la app real, con datos de demostración.</span></h2></div>
-    <div class="vsl rv" style="cursor:auto">
-      <video src="vsl.mp4" poster="poster.jpg" controls playsinline preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#0d0f13" aria-label="Video ilustrativo de Expediente digital"></video>
-    </div>
-    <div class="ctas rv" style="margin-top:28px">
-      <a class="btn btn-dark btn-shiny btn-lg" href="#aplicar">Quiero verlo con mis expedientes</a>
-    </div>
   </section>
 
   <!-- PROBLEM STATEMENT -->
