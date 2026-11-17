@@ -695,13 +695,16 @@ document.getElementById('confirm').onclick=()=>goThanks(pick,pickIso);
 // ---- Cal.com: pega aquí tu enlace (ej.: 'tu-usuario/demo-expediente'). Vacío = selector de horarios de prueba.
 const CAL_LINK='jeremy-dupuy/30min';
 function goThanks(when,iso){try{sessionStorage.setItem('ed_booking',when||'');sessionStorage.setItem('ed_iso',iso||'')}catch(_){}location.href='gracias.html'}
+function notasLead(fd){const T={banco:'Banco',financiera:'Financiera o cooperativa',aseguradora:'Aseguradora',otra:'Otra empresa'},C={si:'Ya usa Creatio en producción',impl:'Está implementando Creatio',no:'No usa Creatio'},V={'1':'menos de 100','2':'100 a 1.000','3':'más de 1.000'},W={ya:'este trimestre','6m':'en los próximos 6 meses',exp:'solo explorando'};
+  const tipo=fd.get('tipo')==='otra'&&fd.get('industria')?'Otra empresa ('+fd.get('industria')+')':T[fd.get('tipo')]||'';
+  return [`Empresa: ${fd.get('empresa')} · ${tipo}`,`Cargo: ${fd.get('cargo')}`,C[fd.get('creatio')]||'',`Expedientes nuevos al mes: ${V[fd.get('vol')]||''}`,`Quiere empezar: ${W[fd.get('cuando')]||''}`,`Llegó desde: ${fd.get('fuente')==='directo'?'enlace directo':fd.get('fuente')}`].join('\n')}
 function openCal(fd){
   document.getElementById('slots').style.display='none';document.getElementById('confirm').style.display='none';
   const box=document.getElementById('cal-inline');box.style.display='block';
   (function(C,A,L){let p=function(a,ar){a.q.push(ar)};let d=C.document;C.Cal=C.Cal||function(){let cal=C.Cal;let ar=arguments;if(!cal.loaded){cal.ns={};cal.q=cal.q||[];d.head.appendChild(d.createElement("script")).src=A;cal.loaded=true}if(ar[0]===L){const api=function(){p(api,arguments)};const namespace=ar[1];api.q=api.q||[];if(typeof namespace==="string"){cal.ns[namespace]=cal.ns[namespace]||api;p(cal.ns[namespace],ar);p(cal,["initNamespace",namespace])}else p(cal,ar);return}p(cal,ar)}})(window,"https://app.cal.com/embed/embed.js","init");
   Cal("init",{origin:"https://cal.com"});
   Cal("ui",{theme:"light",hideEventTypeDetails:false,layout:"month_view",cssVarsPerTheme:{light:{"cal-brand":"#1f45c9","cal-brand-emphasis":"#15171c","cal-brand-text":"#ffffff"}}});
-  Cal("inline",{elementOrSelector:"#cal-inline",calLink:CAL_LINK,config:{layout:"month_view",name:fd.get('nombre'),email:fd.get('correo'),notes:`${fd.get('empresa')} · ${fd.get('cargo')} · Creatio: ${fd.get('creatio')} · Volumen: ${fd.get('vol')} · Inicio: ${fd.get('cuando')}${fd.get('industria')?' · Industria: '+fd.get('industria'):''} · Fuente: ${fd.get('fuente')}`}});
+  Cal("inline",{elementOrSelector:"#cal-inline",calLink:CAL_LINK,config:{layout:"month_view",name:fd.get('nombre'),email:fd.get('correo'),notes:notasLead(fd)}});
   // Si el calendario no carga (vista previa con red restringida), se muestran horarios de prueba y el enlace directo
   setTimeout(()=>{if(!box.querySelector('iframe')){box.style.display='none';document.getElementById('slots').style.display='';document.getElementById('confirm').style.display='';buildSlots(fd.get('vol')==='3'||fd.get('tipo')==='banco');
     const a=document.createElement('p');a.className='fine';a.style.cssText='text-align:center;margin-top:12px';a.innerHTML='¿No ves el calendario? <a href="https://cal.com/'+CAL_LINK+'" target="_blank" rel="noopener" style="color:var(--blue)">Ábrelo en Cal.com</a>';document.getElementById('confirm').after(a)}},6000);
