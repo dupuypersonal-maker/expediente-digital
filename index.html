@@ -251,6 +251,9 @@ h1{font-size:clamp(40px,6.4vw,76px);line-height:1.02;letter-spacing:-.045em;font
  .st{flex:1 1 auto;white-space:nowrap;font-size:10.5px;padding:0 7px;height:28px}
  .row{padding-left:14px!important;padding-right:14px!important;gap:10px}
 }
+
+.blabels i{font-style:normal}.blabels .sh{display:none}
+@media (max-width:600px){.blabels .lg{display:none}.blabels .sh{display:inline}.blabels span{font-size:10.5px;min-width:0;white-space:nowrap;text-align:center}}
 @media (max-width:380px){.pill{font-size:11px}.st{font-size:9.5px}}
 
 /* video */
@@ -387,7 +390,7 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
             </div>
             <div class="card"><h5>Expedientes por tipo</h5>
               <div class="bars" id="bars"><div class="bar" data-h="100"></div><div class="bar" data-h="62"></div><div class="bar" data-h="88"></div><div class="bar" data-h="25"></div><div class="bar" data-h="50"></div></div>
-              <div class="blabels"><span>Solicitud de crédito</span><span>Colaborador</span><span>Hipoteca</span><span>Selección</span><span>Proveedor</span></div>
+              <div class="blabels"><span><i class="lg">Solicitud de crédito</i><i class="sh">Crédito</i></span><span><i class="lg">Colaborador</i><i class="sh">Colab.</i></span><span><i class="lg">Hipoteca</i><i class="sh">Hipot.</i></span><span><i class="lg">Selección</i><i class="sh">Selec.</i></span><span><i class="lg">Proveedor</i><i class="sh">Prov.</i></span></div>
             </div>
           </div>
         </div>
