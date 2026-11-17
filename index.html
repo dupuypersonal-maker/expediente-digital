@@ -230,6 +230,21 @@ h1{font-size:clamp(40px,6.4vw,76px);line-height:1.02;letter-spacing:-.045em;font
 @keyframes pk-spin{to{--pk-a:360deg}}
 @media (prefers-reduced-motion:reduce){.pk-card::after{animation:none}}
 
+
+/* mobile polish */
+@media (max-width:600px){
+ .app{grid-template-columns:minmax(0,1fr)!important}
+ .main{min-width:0;overflow:hidden}
+ .main *{min-width:0}
+ .main svg{max-width:100%}
+ .kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ .pill{font-size:12px;gap:6px;white-space:nowrap;padding-right:10px}
+ .pill b{font-size:11px;padding:2px 7px}
+ .pill>span:last-child{display:none}
+ .cr-pill{height:13px}
+}
+@media (max-width:380px){.pill{font-size:11px}}
+
 /* video */
 .vsl{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/9;background:#10131a;max-width:960px;margin:40px auto 0;cursor:pointer}
 .vsl .blur{position:absolute;inset:-20px;filter:blur(14px) brightness(.55);transform:scale(1.05)}
