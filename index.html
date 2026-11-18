@@ -7,7 +7,7 @@
 <title>Expediente digital para Creatio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#15171c; --mute:#6b7382; --soft:#9aa1ad; --line:#ececee; --bg:#fff; --panel:#f6f6f7; --panel2:#efeff1;
@@ -324,6 +324,11 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
 .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1)}
 .rv.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.bar{transition:none}}
+
+/* Títulos en serif corporativo (como pranical.com). Mockups y textos de apoyo siguen en Inter. */
+h1,.statement h2,.auth h2,.final h2,h3.serif{font-family:"DM Serif Display",Georgia,serif!important;font-weight:400!important;letter-spacing:-.012em!important}
+h1{line-height:1.06}
+.statement h2 .g,h3.serif .g{font-weight:400!important}
 </style>
 </head>
 <body>
@@ -547,7 +552,7 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
   <section class="pad" id="aplicar">
     <div class="apply">
       <div class="rv">
-        <h3 style="font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.035em;font-weight:600;margin:0">Trae un expediente real. <span class="g" style="font-weight:500">Te mostramos cómo quedaría.</span></h3>
+        <h3 class="serif" style="font-size:clamp(28px,3.2vw,40px);line-height:1.08;letter-spacing:-.035em;font-weight:600;margin:0">Trae un expediente real. <span class="g" style="font-weight:500">Te mostramos cómo quedaría.</span></h3>
         <p style="color:var(--mute);margin:18px 0 0;max-width:420px">Demo de 30 minutos sobre tu proceso, no una genérica. Contesta cuatro preguntas para que llegue la persona correcta a la llamada.</p>
         <ul style="margin:28px 0 0;padding:0;list-style:none;display:grid;gap:12px;font-size:14px;color:#3b404a">
           <li>✓&nbsp; Revisamos cómo armas hoy tus expedientes</li>
@@ -622,7 +627,7 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
   <!-- FAQ -->
   <section class="pad">
     <div class="faqgrid">
-      <h3 class="rv" style="font-size:clamp(28px,3vw,38px);letter-spacing:-.035em;line-height:1.1;font-weight:600;margin:0">Respuestas antes de que preguntes.</h3>
+      <h3 class="rv serif" style="font-size:clamp(28px,3vw,38px);letter-spacing:-.035em;line-height:1.1;font-weight:600;margin:0">Respuestas antes de que preguntes.</h3>
       <div class="rv">
         <details open><summary>¿Necesito tener Creatio?</summary><p>Esta versión es una app para el Marketplace de Creatio. Si no tienes Creatio, existe la misma solución sobre plataforma propia; marca "No" en el formulario y te mostramos esa versión.</p></details>
         <details><summary>¿Se adapta a mis tipos de documento?</summary><p>Sí. Los tipos de dato, de documento y de expediente se configuran sin programar, con los campos y la vigencia que pida tu proceso.</p></details>
